@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101412" />
+    <meta name="description" content="ArchShield checks your TypeScript and JavaScript project for architecture drift, dependency violations and circular imports." />
+    <title>ArchShield — Architecture checks for real codebases</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="ArchShield home">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>arch<span class="brand-light">shield</span></span>
+          <span class="version">WEB SCANNER</span>
+        </a>
+        <nav class="top-links" aria-label="Main navigation">
+          <a href="https://github.com" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
+          <a href="https://github.com/topics/software-architecture" target="_blank" rel="noreferrer">Architecture notes <span>↗</span></a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="eyebrow"><span class="live-dot"></span> ARCHITECTURE QUALITY · TYPESCRIPT & JAVASCRIPT</div>
+          <h1>Good architecture<br /><em>doesn't happen by accident.</em></h1>
+          <p class="hero-copy">Inspect module boundaries, catch forbidden dependencies and find circular imports before they become expensive to fix.</p>
+        </section>
+
+        <section class="scanner-card" aria-labelledby="scan-title">
+          <div class="card-heading">
+            <div>
+              <div class="section-kicker">START A NEW ANALYSIS</div>
+              <h2 id="scan-title">Choose a codebase</h2>
+            </div>
+            <span class="secure-label"><span>⌁</span> EPHEMERAL SCAN</span>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Source type">
+            <button class="tab active" id="github-tab" role="tab" aria-selected="true" aria-controls="github-panel" data-mode="github"><span class="tab-icon">⌘</span> Public GitHub repo</button>
+            <button class="tab" id="zip-tab" role="tab" aria-selected="false" aria-controls="zip-panel" data-mode="zip"><span class="tab-icon">↥</span> Upload ZIP</button>
+          </div>
+
+          <div class="source-panel" id="github-panel" role="tabpanel" aria-labelledby="github-tab">
+            <label for="repo-url">REPOSITORY URL</label>
+            <div class="input-wrap"><span class="input-prefix">github.com /</span><input id="repo-url" type="url" placeholder="owner / repository" autocomplete="url" spellcheck="false" /></div>
+            <p class="field-hint">Public repositories only. Paste the full https://github.com/owner/repository URL.</p>
+          </div>
+
+          <div class="source-panel hidden" id="zip-panel" role="tabpanel" aria-labelledby="zip-tab">
+            <label for="zip-file">PROJECT ARCHIVE</label>
+            <label class="dropzone" for="zip-file" id="dropzone">
+              <span class="upload-icon">↑</span>
+              <strong id="file-label">Drop a ZIP here or <u>browse files</u></strong>
+              <small>ZIP archive · up to 4 MB · source files only are extracted</small>
+            </label>
+            <input id="zip-file" type="file" accept=".zip,application/zip" hidden />
+          </div>
+
+          <div class="scan-actions">
+            <button class="primary-button" id="scan-button"><span>Run architecture scan</span><span class="button-arrow">→</span></button>
+            <span class="runtime-note">Usually takes a few seconds</span>
+          </div>
+          <div class="progress hidden" id="progress" aria-live="polite"><span class="spinner"></span><span id="progress-text">Preparing your project…</span></div>
+          <div class="error-box hidden" id="error-box" role="alert"></div>
+          <div class="privacy-note"><span class="lock-icon">▣</span><span>Source files are processed temporarily to run the scan, then the temporary workspace is deleted. No repository is saved by ArchShield. Do not upload secrets or private code you are not authorized to share.</span></div>
+        </section>
+
+        <section class="results hidden" id="results" aria-live="polite">
+          <div class="results-topline"><div><div class="section-kicker">ANALYSIS REPORT</div><h2 id="result-project">Project results</h2><p id="result-meta" class="result-meta"></p></div><button class="secondary-button" id="new-scan">New scan ↗</button></div>
+          <div class="notice hidden" id="config-notice"></div>
+          <div class="metric-grid">
+            <article class="metric"><span>FILES ANALYZED</span><strong id="metric-files">0</strong><small>Source files inspected</small></article>
+            <article class="metric"><span>LOCAL DEPENDENCIES</span><strong id="metric-local">0</strong><small>Resolved project imports</small></article>
+            <article class="metric"><span>ERRORS</span><strong class="metric-error" id="metric-errors">0</strong><small>Architecture violations</small></article>
+            <article class="metric"><span>WARNINGS</span><strong class="metric-warning" id="metric-warnings">0</strong><small>Review recommended</small></article>
+          </div>
+          <div class="results-layout">
+            <section class="findings-card">
+              <div class="findings-heading"><div><div class="section-kicker">WHAT NEEDS ATTENTION</div><h3>Findings <span id="finding-count">0</span></h3></div><div class="filter-row"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="error">Errors</button><button class="filter" data-filter="warning">Warnings</button><button class="filter" data-filter="info">Info</button></div></div>
+              <div id="findings-list" class="findings-list"></div>
+            </section>
+            <aside class="side-card"><div class="section-kicker">SCAN DETAILS</div><div class="detail-row"><span>External imports</span><strong id="metric-external">0</strong></div><div class="detail-row"><span>Scan duration</span><strong id="metric-duration">0 ms</strong></div><div class="detail-row"><span>Configuration</span><strong id="metric-config">Default</strong></div><div class="detail-row"><span>Tool version</span><strong id="metric-version">0.1.0</strong></div><div class="side-divider"></div><div class="section-kicker">DIAGNOSTICS</div><div id="diagnostics-list" class="diagnostics-list">No diagnostics reported.</div><button class="export-button" id="export-report">Download JSON report ↓</button></aside>
+          </div>
+        </section>
+
+        <section class="how-section">
+          <div class="section-kicker">A SMALL TOOL FOR A BIG PROBLEM</div>
+          <h2>Make boundaries<br />part of your workflow.</h2>
+          <div class="feature-grid">
+            <article><span class="feature-number">01</span><h3>Layer boundaries</h3><p>Catch presentation, domain and infrastructure layers depending on the wrong things.</p></article>
+            <article><span class="feature-number">02</span><h3>Dependency rules</h3><p>Define forbidden imports and allowed dependency directions with explicit rules.</p></article>
+            <article><span class="feature-number">03</span><h3>Circular imports</h3><p>Expose dependency cycles that make code harder to reason about and change safely.</p></article>
+          </div>
+        </section>
+      </main>
+      <footer><a class="brand footer-brand" href="/"><span class="brand-mark"><span></span><span></span><span></span></span><span>arch<span class="brand-light">shield</span></span></a><span>Architecture checks for code that keeps growing.</span><span>Built for developers, not dashboards.</span></footer>
+    </div>
+  </body>
+</html>

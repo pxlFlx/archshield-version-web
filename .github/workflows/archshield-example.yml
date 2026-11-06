@@ -1,0 +1,38 @@
+name: ArchShield
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  architecture:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ArchShield
+        run: npm run build
+
+      - name: Run quality checks
+        run: npm run check
+
+      - name: Check architecture
+        run: node dist/cli.js check --config examples/clean-architecture/archshield.json

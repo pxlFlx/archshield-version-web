@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "project": {
+    "name": "violating-example",
+    "root": "."
+  },
+  "include": ["src/**/*.ts"],
+  "layers": [
+    { "name": "presentation", "patterns": ["src/presentation/**"] },
+    { "name": "infrastructure", "patterns": ["src/infrastructure/**"] }
+  ],
+  "rules": [
+    {
+      "id": "presentation-no-infrastructure",
+      "type": "layer-boundary",
+      "severity": "error",
+      "from": ["presentation"],
+      "to": ["infrastructure"]
+    }
+  ]
+}

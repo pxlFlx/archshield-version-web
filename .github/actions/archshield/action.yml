@@ -1,0 +1,21 @@
+name: ArchShield check
+description: Run the local-first ArchShield architecture analyzer
+inputs:
+  config:
+    description: Path to archshield.json
+    required: false
+    default: archshield.json
+  version:
+    description: Published ArchShield npm version
+    required: false
+    default: 0.1.0
+runs:
+  using: composite
+  steps:
+    - name: Run ArchShield
+      shell: bash
+      env:
+        ARCHSHIELD_CONFIG: ${{ inputs.config }}
+        ARCHSHIELD_VERSION: ${{ inputs.version }}
+      run: |
+        npm exec --yes --package="archshield@${ARCHSHIELD_VERSION}" -- archshield check --config "${ARCHSHIELD_CONFIG}"

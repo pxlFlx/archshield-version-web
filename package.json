@@ -1,0 +1,49 @@
+{
+  "name": "archshield",
+  "version": "0.1.0",
+  "description": "Local-first architectural dependency checks for TypeScript and JavaScript projects",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "archshield": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "ui",
+    "local-ui",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "ui": "npm run build && node dist/cli.js ui",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "test": "npm run build && vitest run",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "fast-glob": "^3.3.3",
+    "ignore": "^7.0.5",
+    "picomatch": "^4.0.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
+    "eslint": "^10.14.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.12"
+  },
+  "overrides": {
+    "minimatch": "^11.0.1"
+  }
+}

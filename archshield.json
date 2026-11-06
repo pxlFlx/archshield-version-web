@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "project": {
+    "name": "sample-app",
+    "root": "."
+  },
+  "include": ["src/**/*.{ts,tsx,js,jsx,mjs,cjs}"],
+  "exclude": [
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/generated/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/coverage/**"
+  ],
+  "languages": {
+    "typescript": {
+      "enabled": true
+    },
+    "javascript": {
+      "enabled": true
+    },
+    "php": {
+      "enabled": false
+    },
+    "python": {
+      "enabled": false
+    }
+  },
+  "layers": [
+    {
+      "name": "presentation",
+      "patterns": ["src/components/**", "src/views/**", "src/pages/**"]
+    },
+    {
+      "name": "application",
+      "patterns": ["src/services/**", "src/use-cases/**"]
+    },
+    {
+      "name": "domain",
+      "patterns": ["src/domain/**", "src/entities/**"]
+    },
+    {
+      "name": "infrastructure",
+      "patterns": [
+        "src/repositories/**",
+        "src/database/**",
+        "src/infrastructure/**"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "no-presentation-to-infrastructure",
+      "type": "layer-boundary",
+      "severity": "error",
+      "from": ["presentation"],
+      "to": ["infrastructure"],
+      "message": "Presentation code must not depend directly on infrastructure."
+    },
+    {
+      "id": "no-domain-to-infrastructure",
+      "type": "layer-boundary",
+      "severity": "error",
+      "from": ["domain"],
+      "to": ["infrastructure"]
+    },
+    {
+      "id": "no-private-imports",
+      "type": "forbidden-import",
+      "severity": "warning",
+      "from": ["src/**/*"],
+      "patterns": ["**/internal/**", "**/private/**"],
+      "match": "path"
+    }
+  ],
+  "settings": {
+    "maxFileSizeKb": 1000,
+    "followSymlinks": false,
+    "unresolvedImports": "warn",
+    "caseSensitivePaths": true,
+    "allowAmbiguousLayers": false
+  }
+}

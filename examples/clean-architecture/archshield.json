@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "project": {
+    "name": "clean-example",
+    "root": "."
+  },
+  "include": ["src/**/*.ts"],
+  "layers": [
+    { "name": "application", "patterns": ["src/application/**"] },
+    { "name": "domain", "patterns": ["src/domain/**"] },
+    { "name": "infrastructure", "patterns": ["src/infrastructure/**"] }
+  ],
+  "rules": [
+    {
+      "id": "domain-no-infrastructure",
+      "type": "layer-boundary",
+      "severity": "error",
+      "from": ["domain"],
+      "to": ["infrastructure"]
+    }
+  ]
+}
